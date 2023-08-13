@@ -1,0 +1,31 @@
+enclave
+{
+	trusted
+	{
+		/*These are ECALL defines.*/
+		public int ecall_test([in, size=message_len]const char *message, size_t message_len);
+
+		public uint32_t calc_sealed_len(uint32_t message_len);
+
+		public void sealing([in, size=message_len]uint8_t *message, uint32_t message_len, [out, size=sealed_len]uint8_t *sealed, uint32_t sealed_len);
+
+		public uint32_t calc_unsealed_len([in, size=sealed_len]uint8_t *sealed, uint32_t sealed_len);
+
+		public void unsealing([in, size=sealed_len]uint8_t *sealed, uint32_t sealed_len, [out, size=unsealed_len]uint8_t *unsealed, uint32_t unsealed_len);
+
+		public int verify([in, size=key_len]char *key, uint32_t key_len, [in, size=password_len]char *password, uint32_t password_len, [in, size=sealed_len]uint8_t *sealed, uint32_t sealed_len);
+
+		//public void ecall_print_sgx_status(sgx_status_t st);
+
+		public void get_password([in, size=key_len]char *key, uint32_t key_len, [in, size=sealed_len]uint8_t *sealed, uint32_t sealed_len, [out, size=retval_len]uint8_t *retval, uint32_t retval_len);
+
+		public int get_password_len([in, size=key_len]char *key, uint32_t key_len, [in, size=sealed_len]uint8_t *sealed, uint32_t sealed_len);
+	};
+	untrusted
+	{
+		/*These are OCALL defines.*/
+		void ocall_print([in, string]const char *str);
+		//void ocall_print_sgx_status(sgx_status_t st);
+		uint8_t* ocall_base64_decode([in, size=sealed_line_base64_len]char *sealed_line_base64, uint32_t sealed_line_base64_len);
+	};
+};
